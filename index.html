@@ -99,7 +99,67 @@ function EmojiMosaic(dataURI) {
 	img.src = this.dataURI;
 }
 
-var drawCases = function(samples, startIdx, endIdx)
+var drawCases = function(sample)
+{
+	var imageData, sums, i, red, green, blue, closest;
+	// Get image pixel data.
+	imageData = extractionCanvasContext.getImageData(Math.round( sample[0] - margin ), Math.round( sample[1] - margin ), 1, 1);
+
+	// Get average color data for an area.
+	sums = { red: 0, green: 0, blue: 0 };
+	for ( i = 0; i < imageData.data.length; i++ ) {
+		switch ( i % 4 ) {
+			case 0:
+				sums.red += imageData.data[i];
+			break;
+			case 1:
+				sums.green += imageData.data[i];
+			break;
+			case 2:
+				sums.blue += imageData.data[i];
+			break;
+		}
+	}
+
+	red = sums.red / ( imageData.data.length / 4 );
+	green = sums.green / ( imageData.data.length / 4 );
+	blue = sums.blue / ( imageData.data.length / 4 );
+
+	//closest = closestEmoji( [ red, green, blue ] );
+	closestClusterIndex = closestCluster( [ red, green, blue ] );
+	clusterPaths = emojiDictionary[closestClusterIndex].split(',');
+		
+	//numEmojis = 
+	idx = Math.floor(Math.random() * clusterPaths.length); 
+	emojiPath = 'resized-emoji-images/' + clusterPaths[idx]
+
+	emojiImage = new Image();
+	emojiImage.src = emojiPath;
+	dataX = sample[0] - 10;
+	dataY = sample[1] - 10;
+	emojiImage.setAttribute('data-x', (sample[0] - 10 ) );
+	emojiImage.setAttribute('data-y', (sample[1] - 10 ) );
+	//emojiImage.style.transform = 'rotate(180deg)';
+	// After the image is loaded, draw it onto the canvas.
+	emojiImage.onload = (function(event){
+		var image = event.target;
+
+		dataX = image.getAttribute('data-x');
+		dataY = image.getAttribute('data-y');
+		rotationAngle = Math.random() * 360;
+		var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
+		svgimg.setAttribute('height','17');
+		svgimg.setAttribute('width','17');
+		svgimg.setAttribute('id','imageContainer');
+		svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', image.src);
+
+		svgimg.setAttribute('x', dataX);
+		svgimg.setAttribute('y', dataY);
+		document.getElementById('svgContainer').appendChild(svgimg)
+	});
+}
+
+/*var drawCases = function(samples, startIdx, endIdx)
 {
 	for(var i = startIdx; i<endIdx; i++)
 	{
@@ -161,7 +221,7 @@ var drawCases = function(samples, startIdx, endIdx)
 			document.getElementById('svgContainer').appendChild(svgimg)
 		});
 	}
-}
+}*/
 
 ImageLoaded.prototype.imageLoaded = function()
 {
@@ -211,7 +271,17 @@ ImageLoaded.prototype.imageLoaded = function()
 	timesToRepeat = Math.floor(3427343 / samples.length);
 	window.setInterval(function()
 	{
-		if(timesRepeated >= timesToRepeat)
+		console.log(i>=samples.length)
+		if(i>=samples.length)
+		{
+			clearInterval();
+		}
+		else
+		{
+			drawCases(samples[i]);
+			i++;
+		}
+		/*if(timesRepeated >= timesToRepeat)
 		{
 			clearInterval();
 		}
@@ -222,10 +292,10 @@ ImageLoaded.prototype.imageLoaded = function()
 				timesRepeated++;
 				i = 0;
 			}
-			drawCases(samples, i, i+500);
-			i = i + 500;
-		}
-	}, 1);
+			drawCases(samples, i, i+10);
+			i = i + 10;
+		}*/
+	}, 10);
 }
 
 function ImageLoaded(dataURI) {
