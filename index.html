@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <body>
 	<p>Date: <span id="datetime"></span></p>
+	<img src="/original-image/ad.jpg">
 	<div id='svg1' height="1080" width="960"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -460,20 +461,22 @@ function ImageLoaded(dataURI) {
 	img.src = this.dataURI;
 }
 
-document.addEventListener('DOMContentLoaded', function (event) {
+document.addEventListener('DOMContentLoaded', function (event) 
+{
 	var inputEl = document.querySelector('input');
-	var image = new Image();
-	image.onload = function()
+	// Check if the file is an image.
+	file = '/original-image/ad.jpg';
+	if (file.type && file.type.indexOf('image') === -1) 
 	{
-		new ImageLoaded('/original-image/Agnus_Dei.jpg');
-	};
-	image.src = '/original-image/Agnus_Dei.jpg';
-	/*var reader = new FileReader();
-	reader.onloadend = function () 
-	{
-		new ImageLoaded(reader.result);
-	}
-	reader.readAsDataURL('/original_image/Agnus_Dei.jpg');*/
+		console.log('File is not an image.', file.type, file);
+		return;
+  	}
+
+	const reader = new FileReader();
+	reader.addEventListener('load', (event) => {
+		img.src = event.target.result;
+	});
+	reader.readAsDataURL(file);
 	//new ImageLoaded('/original_image/Agnus_Dei.jpg');
 	//new ImageLoaded('/original-image/Agnus_Dei.jpg');
 	
