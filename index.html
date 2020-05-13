@@ -2,7 +2,6 @@
 <meta charset="utf-8">
 <body>
 	<p>Date: <span id="datetime"></span></p>
-	<img id='originalImage' src="./original-image/ad.jpg" style="display:none"/>
 	<div id='svg1' height="1080" width="960"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -281,8 +280,7 @@ Date.prototype.formatMMDDYYYY = function(){
     "/" +  (String(parseInt(this.getYear()) - 100));
 }
 
-//ImageLoaded.prototype.imageLoaded = function()
-var imageLoaded = function()
+ImageLoaded.prototype.imageLoaded = function()
 {
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
@@ -298,7 +296,7 @@ var imageLoaded = function()
 	this.img.naturalWidth *= ratio;
 
 	// A canvas element for extracting image pixel color data.
-	//extractionCanvas = document.createElement('canvas');
+	extractionCanvas = document.createElement('canvas');
 	extractionCanvas.width = this.img.naturalHeight;
 	extractionCanvas.height = this.img.naturalWidth;
 	extractionCanvasContext = extractionCanvas.getContext('2d');
@@ -472,24 +470,14 @@ function ImageLoaded(dataURI) {
 
 document.addEventListener('DOMContentLoaded', function (event) 
 { 
-	extractionCanvas = document.createElement('canvas');
+	/*extractionCanvas = document.createElement('canvas');
 	var ctx = extractionCanvas.getContext("2d");
 	var img = new Image();
 	img.onload = function() {
-		ctx.drawImage(img, 0, 0);
-	};
-	img.src = 'https://github.com/worldwidewindow/worldwidewindow.github.io/blob/master/original-image/ad.jpg';
-	//new ImageLoaded('/original_image/Agnus_Dei.jpg');
-	//new ImageLoaded('/original-image/Agnus_Dei.jpg');
-	
-	/*document.querySelector('input').addEventListener('change', function () {
-		// When a file is uploaded, initialize
-		var file = inputEl.files[0];
-		var reader = new FileReader();
-		reader.onloadend = function () {
-			new ImageLoaded(reader.result);
-		}
-		reader.readAsDataURL(file);
-	});*/
+		this.img = 
+		imageLoaded();
+	};*/
+	fileSource = 'https://github.com/worldwidewindow/worldwidewindow.github.io/blob/master/original-image/ad.jpg';
+	new ImageLoaded(fileSource)
 });
 </script>
