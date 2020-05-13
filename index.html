@@ -2,7 +2,6 @@
 <meta charset="utf-8">
 <body>
 	<p>Date: <span id="datetime"></span></p>
-	<button onclick="downloadSVG()">Download</button>
 	<div id='svg1' height="1080" width="960"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -18,7 +17,7 @@
 <script src="emojiDeathDictionary.js"></script>
 <script src="emojiRecoveredDictionary.js"></script>
 <script src="categories.js"></script>
-<input type="file">
+<!--<input type="file">-->
 <BR>
 <script>
 var liveData = null;
@@ -285,8 +284,7 @@ ImageLoaded.prototype.imageLoaded = function()
 {
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
-	this
-	ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
+	this.ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
 	this.img.height *= ratio;
 	this.img.width *= ratio;
 	// A canvas element for extracting image pixel color data.
@@ -464,6 +462,12 @@ function ImageLoaded(dataURI) {
 
 document.addEventListener('DOMContentLoaded', function (event) {
 	var inputEl = document.querySelector('input');
+	var image = new Image();
+	image.onload = function()
+	{
+		new ImageLoaded('/original-image/Agnus_Dei.jpg');
+	};
+	image.src = '/original-image/Agnus_Dei.jpg';
 	/*var reader = new FileReader();
 	reader.onloadend = function () 
 	{
@@ -471,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 	}
 	reader.readAsDataURL('/original_image/Agnus_Dei.jpg');*/
 	//new ImageLoaded('/original_image/Agnus_Dei.jpg');
-	new ImageLoaded('./original-image/Agnus_Dei.jpg');
+	//new ImageLoaded('/original-image/Agnus_Dei.jpg');
 	
 	/*document.querySelector('input').addEventListener('change', function () {
 		// When a file is uploaded, initialize
