@@ -470,14 +470,14 @@ function ImageLoaded(dataURI) {
 
 document.addEventListener('DOMContentLoaded', function (event) 
 { 
-	/*extractionCanvas = document.createElement('canvas');
+	extractionCanvas = document.createElement('canvas');
 	var ctx = extractionCanvas.getContext("2d");
-	var img = new Image();
-	img.onload = function() {
-		this.img = 
+	this.img = new Image();
+	this.img.onload = function() {
+		
 		imageLoaded();
-	};*/
-	fileSource = 'https://github.com/worldwidewindow/worldwidewindow.github.io/blob/master/original-image/ad.jpg';
-	new ImageLoaded(fileSource)
+	};
+	this.img.src = 'https://github.com/worldwidewindow/worldwidewindow.github.io/blob/master/original-image/ad.jpg';
+	
 });
 </script>
