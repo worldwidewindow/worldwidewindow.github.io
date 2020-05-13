@@ -457,13 +457,21 @@ ImageLoaded.prototype.imageLoaded = function()
 function ImageLoaded(dataURI) {
 	var img = this.img = new Image;
 	this.dataURI = dataURI;
-	img.addEventListener('load', this.imageLoaded.bind(this));
+	//img.addEventListener('load', this.imageLoaded.bind(this));
+	img.addEventListener('load', this.imageLoaded(this))
 	img.src = this.dataURI;
 }
 
 document.addEventListener('DOMContentLoaded', function (event) {
 	var inputEl = document.querySelector('input');
-	ImageLoaded('/original_image/Agnus_Dei.jpg')
+	/*var reader = new FileReader();
+	reader.onloadend = function () 
+	{
+		new ImageLoaded(reader.result);
+	}
+	reader.readAsDataURL('/original_image/Agnus_Dei.jpg');*/
+	new ImageLoaded('/original_image/Agnus_Dei.jpg');
+	
 	/*document.querySelector('input').addEventListener('change', function () {
 		// When a file is uploaded, initialize
 		var file = inputEl.files[0];
