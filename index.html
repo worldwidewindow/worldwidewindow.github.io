@@ -281,7 +281,8 @@ Date.prototype.formatMMDDYYYY = function(){
     "/" +  (String(parseInt(this.getYear()) - 100));
 }
 
-ImageLoaded.prototype.imageLoaded = function()
+//ImageLoaded.prototype.imageLoaded = function()
+var imageLoaded = function()
 {
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
