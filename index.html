@@ -466,12 +466,12 @@ document.addEventListener('DOMContentLoaded', function (event)
 { 	
 	//imageLoaded();
 	img = new Image();
-	this.img.crossOrigin = 'anonymous';
-	this.img.onload = function() 
+	img.crossOrigin = 'anonymous';
+	img.onload = function() 
 	{
 		ImageLoaded(img.src);
 	};
 	//this.img.src = 'https://github.com/worldwidewindow/worldwidewindow.github.io/blob/master/original-image/ad.jpg';
-	this.img.src = './original-image/ad.jpg';
+	img.src = './original-image/ad.jpg';
 });
 </script>
