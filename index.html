@@ -286,23 +286,14 @@ var imageLoaded = function()
 {
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
-	/*this.ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
+	this.ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
 	this.img.height *= ratio;
-	this.img.width *= ratio;*/
-
-	//new component for original image
-	this.img = document.getElementById('originalImg');
-	this.imgcrossOrigin = "Anonymous";
-	this.ratio = ( window.innerWidth ) / ( this.img.naturalWidth + margin * 2 );
-	originalHeight = this.img.height * this.ratio;
-	originalWidth = this.img.naturalWidth * this.ratio;
+	this.img.width *= ratio;
 
 	// A canvas element for extracting image pixel color data.
 	extractionCanvas = document.createElement('canvas');
-	/*extractionCanvas.width = this.img.height;
-	extractionCanvas.height = this.img.width;*/
-	extractionCanvas.width = originalHeight;
-	extractionCanvas.height = originalWidth;
+	extractionCanvas.width = this.img.height;
+	extractionCanvas.height = this.img.width;
 	extractionCanvasContext = extractionCanvas.getContext('2d');
 	extractionCanvasContext.drawImage(this.img, 0, 0, extractionCanvas.width, extractionCanvas.height );
 	document.getElementById('svg1').width = extractionCanvas.width;
