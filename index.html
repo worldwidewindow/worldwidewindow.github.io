@@ -282,8 +282,9 @@ Date.prototype.formatMMDDYYYY = function(){
 }
 
 //ImageLoaded.prototype.imageLoaded = function()
-var imageLoaded = function()
+var imageLoaded = function(imagen)
 {
+	console.log(imagen.height);
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
 	this.ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
