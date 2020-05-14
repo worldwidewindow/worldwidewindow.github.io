@@ -3,7 +3,7 @@
 <body>
 	<!--<img id='originalImg'  src="./original-image/ad.jpg" style="display:none"/>--><!---->
 	<div id='svg1' height="1080" width="960"></div>
-	<table>
+	<table style="margin-left:auto;margin-right:auto;">
 		<tr>
 			<td><p>Date: <span id="datetime"></span></p></td>
 			<td><p>Infected: <span id="confirmedCasesDisplay"></span></p></td>
@@ -277,12 +277,12 @@ var drawCasesSamplesOnce = function(sample, category)
 			else if(category=='death')
 			{
 				totalDeaths++;
-				document.getElementById("deathsCasesDisplay").innerHTML = totalConfirmed;	
+				document.getElementById("deathsCasesDisplay").innerHTML = totalDeaths;	
 			}
 			else if(category=='recovered')
 			{
 				totalRecovered++;
-				document.getElementById("recoveredCasesDisplay").innerHTML = totalConfirmed;
+				document.getElementById("recoveredCasesDisplay").innerHTML = totalRecovered;
 			}
 			else if(category=='change')
 			{
@@ -306,12 +306,12 @@ var drawCasesSamplesOnce = function(sample, category)
 		else if(category=='death')
 		{
 			totalDeaths++;
-			document.getElementById("deathsCasesDisplay").innerHTML = totalConfirmed;	
+			document.getElementById("deathsCasesDisplay").innerHTML = totalDeaths;	
 		}
 		else if(category=='recovered')
 		{
 			totalRecovered++;
-			document.getElementById("recoveredCasesDisplay").innerHTML = totalConfirmed;
+			document.getElementById("recoveredCasesDisplay").innerHTML = totalRecovered;
 		}
 	}
 	/*else
