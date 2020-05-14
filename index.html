@@ -291,8 +291,8 @@ ImageLoaded.prototype.imageLoaded = function()
 
 	// A canvas element for extracting image pixel color data.
 	extractionCanvas = document.createElement('canvas');
-	extractionCanvas.width = this.img.height;
-	extractionCanvas.height = this.img.width;
+	extractionCanvas.width = this.img.width;
+	extractionCanvas.height = this.img.height;
 	extractionCanvasContext = extractionCanvas.getContext('2d');
 	extractionCanvasContext.drawImage(this.img, 0, 0, extractionCanvas.width, extractionCanvas.height );
 	document.getElementById('svg1').width = extractionCanvas.width;
