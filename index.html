@@ -282,9 +282,9 @@ Date.prototype.formatMMDDYYYY = function(){
 }
 
 //ImageLoaded.prototype.imageLoaded = function()
-var imageLoaded = function(imagen)
+var imageLoaded = function(imad)
 {
-	console.log(imagen.height);
+	console.log(imad.height);
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
 	this.ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
@@ -460,7 +460,7 @@ function ImageLoaded(dataURI) {
 	var img = this.img = new Image;
 	this.dataURI = dataURI;
 	//img.addEventListener('load', this.imageLoaded.bind(this));
-	img.addEventListener('load', this.imageLoaded(this))
+	img.addEventListener('load', this.imageLoaded(img))
 	img.src = this.dataURI;
 }
 
