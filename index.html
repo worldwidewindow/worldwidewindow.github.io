@@ -281,8 +281,7 @@ Date.prototype.formatMMDDYYYY = function(){
     "/" +  (String(parseInt(this.getYear()) - 100));
 }
 
-//ImageLoaded.prototype.imageLoaded = function()
-var imageLoaded = function()
+ImageLoaded.prototype.imageLoaded = function()
 {
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
@@ -458,19 +457,19 @@ var imageLoaded = function()
 function ImageLoaded(dataURI) {
 	var img = this.img = new Image;
 	this.dataURI = dataURI;
-	//img.addEventListener('load', this.imageLoaded.bind(this));
-	img.addEventListener('load', this.imageLoaded(this))
+	img.addEventListener('load', this.imageLoaded.bind(this));
+	//img.addEventListener('load', this.imageLoaded(this))
 	img.src = this.dataURI;
 }
 
 document.addEventListener('DOMContentLoaded', function (event) 
 { 	
 	//imageLoaded();
-	var img = this.img = new Image;
+	img = new Image();
 	this.img.crossOrigin = 'anonymous';
 	this.img.onload = function() 
 	{
-		imageLoaded();
+		ImageLoaded(img.src);
 	};
 	//this.img.src = 'https://github.com/worldwidewindow/worldwidewindow.github.io/blob/master/original-image/ad.jpg';
 	this.img.src = './original-image/ad.jpg';
