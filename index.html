@@ -263,7 +263,7 @@ var drawCasesSamplesOnce = function(sample, category)
 					var dt = new Date(dateConfirmed);
 					document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
 				}
-				document.getElementById("infectedCasesDisplay").innerHTML = totalConfirmed;
+				document.getElementById("confirmedCasesDisplay").innerHTML = totalConfirmed;
 				/*if(confirmedDictionary[numChildrenSVG])
 				{
 					dateConfirmed = confirmedDictionary[numChildrenSVG];
@@ -284,15 +284,11 @@ var drawCasesSamplesOnce = function(sample, category)
 				totalRecovered++;
 				document.getElementById("recoveredCasesDisplay").innerHTML = totalConfirmed;
 			}
-				else if(category=='change')
-				{
-					emojisChangeDrawn.push(svgimg);
-				}
-					/*else if(category == 'change')
-					{
-						emojisChangeDrawn.push(svgimg);
-					}*/
-			});
+			else if(category=='change')
+			{
+				emojisChangeDrawn.push(svgimg);
+			}
+		});
 	}
 	else
 	{
