@@ -262,6 +262,9 @@ var drawCasesSamplesOnce = function(sample, category)
 					dateConfirmed = confirmedDictionary[totalConfirmed];
 					var dt = new Date(dateConfirmed);
 					document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+					//get svg element.
+					var svg = document.getElementById("svgContainer");	
+					downloadSVG(svg);
 				}
 				document.getElementById("confirmedCasesDisplay").innerHTML = totalConfirmed;
 				/*if(confirmedDictionary[numChildrenSVG])
@@ -378,7 +381,6 @@ ImageLoaded.prototype.imageLoaded = function()
 	casesDrawn = 0;
 	samplesIdx = 0; //last position used in samples array
 	casesToDraw = parseInt(Object.keys(confirmed)[Object.keys(confirmed).length - 1]);
-	casesToDraw = 3427343;
 	var dt = new Date("1/22/20");
 	document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
 	lastIdx = 0;
