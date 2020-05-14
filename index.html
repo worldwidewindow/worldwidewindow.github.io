@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <body>
 	<p>Date: <span id="datetime"></span></p>
+	<!--<img id='originalImg'  src="./original-image/ad.jpg" style="display:none"/>--><!---->
 	<div id='svg1' height="1080" width="960"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -280,7 +281,8 @@ Date.prototype.formatMMDDYYYY = function(){
     "/" +  (String(parseInt(this.getYear()) - 100));
 }
 
-ImageLoaded.prototype.imageLoaded = function()
+//ImageLoaded.prototype.imageLoaded = function()
+var imageLoaded = function()
 {
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
@@ -289,16 +291,18 @@ ImageLoaded.prototype.imageLoaded = function()
 	this.img.width *= ratio;*/
 
 	//new component for original image
-	//this.img = document.getElementById('originalImage');
-
+	this.img = document.getElementById('originalImg');
+	this.imgcrossOrigin = "Anonymous";
 	this.ratio = ( window.innerWidth ) / ( this.img.naturalWidth + margin * 2 );
-	this.img.naturalHeight *= ratio;
-	this.img.naturalWidth *= ratio;
+	originalHeight = this.img.height * this.ratio;
+	originalWidth = this.img.naturalWidth * this.ratio;
 
 	// A canvas element for extracting image pixel color data.
 	extractionCanvas = document.createElement('canvas');
-	extractionCanvas.width = this.img.naturalHeight;
-	extractionCanvas.height = this.img.naturalWidth;
+	/*extractionCanvas.width = this.img.height;
+	extractionCanvas.height = this.img.width;*/
+	extractionCanvas.width = originalHeight;
+	extractionCanvas.height = originalWidth;
 	extractionCanvasContext = extractionCanvas.getContext('2d');
 	extractionCanvasContext.drawImage(this.img, 0, 0, extractionCanvas.width, extractionCanvas.height );
 	document.getElementById('svg1').width = extractionCanvas.width;
@@ -469,15 +473,15 @@ function ImageLoaded(dataURI) {
 }
 
 document.addEventListener('DOMContentLoaded', function (event) 
-{ 
-	extractionCanvas = document.createElement('canvas');
-	var ctx = extractionCanvas.getContext("2d");
+{ 	
+	//imageLoaded();
 	this.img = new Image();
-	this.img.onload = function() {
-		
+	this.img.crossOrigin = 'anonymous';
+	this.img.onload = function() 
+	{
 		imageLoaded();
 	};
-	this.img.src = 'https://github.com/worldwidewindow/worldwidewindow.github.io/blob/master/original-image/ad.jpg';
-	
+	//this.img.src = 'https://github.com/worldwidewindow/worldwidewindow.github.io/blob/master/original-image/ad.jpg';
+	this.img.src = './original-image/ad.jpg';
 });
 </script>
