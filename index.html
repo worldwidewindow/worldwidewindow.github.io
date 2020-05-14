@@ -181,26 +181,14 @@ var drawCasesSamplesOnce = function(sample, category)
 	if(category=="confirmed")
 	{
 		clusterPathsAvailable = emojiConfirmedDictionary[closestClusterIndex];
-		totalConfirmed++;
-		if(confirmedDictionary[totalConfirmed])
-		{
-			dateConfirmed = confirmedDictionary[totalConfirmed];
-			var dt = new Date(dateConfirmed);
-			document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
-		}
-		document.getElementById("infectedCasesDisplay").innerHTML = totalConfirmed;
 	}
 	else if(category=="death")
 	{
 		clusterPathsAvailable = emojiDeathDictionary[closestClusterIndex];
-		totalDeaths++;
-		document.getElementById("deathsCasesDisplay").innerHTML = totalConfirmed;
 	}
 	else if(category=='recovered')
 	{
 		clusterPathsAvailable = emojiRecoveredDictionary[closestClusterIndex];
-		totalRecovered++;
-		document.getElementById("recoveredCasesDisplay").innerHTML = totalConfirmed;
 	}
 	else if(category=='change')
 	{
@@ -268,6 +256,14 @@ var drawCasesSamplesOnce = function(sample, category)
 				emojisConfirmedDrawn.push(svgimg);
 				//check if date needs to be changed and save file with svg
 				numChildrenSVG = document.getElementById('svgContainer').children.length;
+				totalConfirmed++;
+				if(confirmedDictionary[totalConfirmed])
+				{
+					dateConfirmed = confirmedDictionary[totalConfirmed];
+					var dt = new Date(dateConfirmed);
+					document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+				}
+				document.getElementById("infectedCasesDisplay").innerHTML = totalConfirmed;
 				/*if(confirmedDictionary[numChildrenSVG])
 				{
 					dateConfirmed = confirmedDictionary[numChildrenSVG];
@@ -278,15 +274,49 @@ var drawCasesSamplesOnce = function(sample, category)
 					downloadSVG(svg);*/
 				//}
 			}
-			else if(category=='change')
+			else if(category=='death')
 			{
-				emojisChangeDrawn.push(svgimg);
+				totalDeaths++;
+				document.getElementById("deathsCasesDisplay").innerHTML = totalConfirmed;	
 			}
-				/*else if(category == 'change')
+			else if(category=='recovered')
+			{
+				totalRecovered++;
+				document.getElementById("recoveredCasesDisplay").innerHTML = totalConfirmed;
+			}
+				else if(category=='change')
 				{
 					emojisChangeDrawn.push(svgimg);
-				}*/
-		});
+				}
+					/*else if(category == 'change')
+					{
+						emojisChangeDrawn.push(svgimg);
+					}*/
+			});
+	}
+	else
+	{
+		if(category=='confirmed')
+		{
+			totalConfirmed++;
+			if(confirmedDictionary[totalConfirmed])
+			{
+				dateConfirmed = confirmedDictionary[totalConfirmed];
+				var dt = new Date(dateConfirmed);
+				document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+			}
+			document.getElementById("infectedCasesDisplay").innerHTML = totalConfirmed;
+		}
+		else if(category=='death')
+		{
+			totalDeaths++;
+			document.getElementById("deathsCasesDisplay").innerHTML = totalConfirmed;	
+		}
+		else if(category=='recovered')
+		{
+			totalRecovered++;
+			document.getElementById("recoveredCasesDisplay").innerHTML = totalConfirmed;
+		}
 	}
 	/*else
 	{
