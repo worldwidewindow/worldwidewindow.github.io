@@ -457,8 +457,8 @@ ImageLoaded.prototype.imageLoaded = function()
 function ImageLoaded(dataURI) {
 	var img = this.img = new Image;
 	this.dataURI = dataURI;
-	img.addEventListener('load', this.imageLoaded.bind(this));
-	//img.addEventListener('load', this.imageLoaded(this))
+	//img.addEventListener('load', this.imageLoaded.bind(this));
+	img.addEventListener('load', this.imageLoaded(this))
 	img.src = this.dataURI;
 }
 
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function (event)
 { 	
 	//imageLoaded();
 	img = new Image();
-	//img.crossOrigin = 'anonymous';
+	img.crossOrigin = 'anonymous';
 	img.onload = function() 
 	{
 		ImageLoaded(img.src);
