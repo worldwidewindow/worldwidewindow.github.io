@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <body>
 	<!--<img id='originalImg'  src="./original-image/ad.jpg" style="display:none"/>--><!---->
-	<div id='svg1' height="1080" width="960" style="margin-left:auto;margin-right:auto;"></div>
+	<div id='svg1' height="810" width="720" style="margin-left:auto;margin-right:auto;"></div>
 	<table style="margin-left:auto;margin-right:auto;">
 		<tr>
 			<td><p>980c Date: <span id="datetime"></span></p></td>
@@ -333,8 +333,8 @@ ImageLoaded.prototype.imageLoaded = function()
 {
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
-	ratio = ( 960 ) / ( this.img.width + margin * 2 );
-	//ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
+	//ratio = ( 960 ) / ( this.img.width + margin * 2 );
+	ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
 	this.img.height *= ratio;
 	this.img.width *= ratio;
 
