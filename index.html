@@ -1,9 +1,16 @@
 ﻿<!DOCTYPE html>
 <meta charset="utf-8">
 <body>
-	<p>Date: <span id="datetime"></span></p>
 	<!--<img id='originalImg'  src="./original-image/ad.jpg" style="display:none"/>--><!---->
 	<div id='svg1' height="1080" width="960"></div>
+	<table>
+		<tr>
+			<td><p>Date: <span id="datetime"></span></p></td>
+			<td><p>Infected: <span id="confirmedCasesDisplay"></span></p></td>
+			<td><p>Recovered: <span id="recoveredCasesDisplay"></span></p></td>
+			<td><p>Deaths: <span id="deathsCasesDisplay"></span></p></td>
+		</tr>
+	</table>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="emojiColors.js"></script>
@@ -34,6 +41,9 @@ emojisChangeDrawn = [];
 emojisConfirmedDrawn = [];
 scrapData();
 emojiInts = emojiClustersPoints();
+totalConfirmed = 0;
+totalDeaths = 0;
+totalRecovered = 0;
 
 var downloadSVG = function(svg)
 {
@@ -171,14 +181,26 @@ var drawCasesSamplesOnce = function(sample, category)
 	if(category=="confirmed")
 	{
 		clusterPathsAvailable = emojiConfirmedDictionary[closestClusterIndex];
+		totalConfirmed++;
+		if(confirmedDictionary[totalConfirmed])
+		{
+			dateConfirmed = confirmedDictionary[totalConfirmed];
+			var dt = new Date(dateConfirmed);
+			document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+		}
+		document.getElementById("infectedCasesDisplay").innerHTML = totalConfirmed;
 	}
 	else if(category=="death")
 	{
 		clusterPathsAvailable = emojiDeathDictionary[closestClusterIndex];
+		totalDeaths++;
+		document.getElementById("deathsCasesDisplay").innerHTML = totalConfirmed;
 	}
 	else if(category=='recovered')
 	{
 		clusterPathsAvailable = emojiRecoveredDictionary[closestClusterIndex];
+		totalRecovered++;
+		document.getElementById("recoveredCasesDisplay").innerHTML = totalConfirmed;
 	}
 	else if(category=='change')
 	{
@@ -246,15 +268,15 @@ var drawCasesSamplesOnce = function(sample, category)
 				emojisConfirmedDrawn.push(svgimg);
 				//check if date needs to be changed and save file with svg
 				numChildrenSVG = document.getElementById('svgContainer').children.length;
-				if(confirmedDictionary[numChildrenSVG])
+				/*if(confirmedDictionary[numChildrenSVG])
 				{
 					dateConfirmed = confirmedDictionary[numChildrenSVG];
 					var dt = new Date(dateConfirmed);
-					document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+					document.getElementById("datetime").innerHTML = dt.toLocaleDateString();*/
 					//get svg element.
 					/*var svg = document.getElementById("svgContainer");	
 					downloadSVG(svg);*/
-				}
+				//}
 			}
 			else if(category=='change')
 			{
