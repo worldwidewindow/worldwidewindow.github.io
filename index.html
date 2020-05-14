@@ -466,7 +466,7 @@ function ImageLoaded(dataURI) {
 document.addEventListener('DOMContentLoaded', function (event) 
 { 	
 	//imageLoaded();
-	this.img = new Image();
+	var img = this.img = new Image;
 	this.img.crossOrigin = 'anonymous';
 	this.img.onload = function() 
 	{
