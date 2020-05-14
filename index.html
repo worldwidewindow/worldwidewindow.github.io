@@ -355,6 +355,7 @@ ImageLoaded.prototype.imageLoaded = function()
 	svg.setAttribute('id','svgContainer');
 	svg.setAttribute('width', poissonWidth);
 	svg.setAttribute('height', poissonHeight);
+	svg.setAttribute('style', "margin-left:auto;margin-right:auto;");
 	document.getElementById('svg1').appendChild(svg)
 
 	createSample = poissonDiscSampler(poissonWidth, poissonHeight, 3);
