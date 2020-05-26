@@ -1,9 +1,7 @@
 ﻿<!DOCTYPE html>
 <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <body>
-	<!--<img id='originalImg'  src="./original-image/ad.jpg" style="display:none"/>--><!---->
-	<div 
-	id='svg1' height="810" width="720" style="margin-left:auto;margin-right:auto;overflow:hidden;"></div>
+	<div id='svg1' height="769.5" width="684" class="text-center" style="margin-left:auto;margin-right:auto;overflow:hidden;"></div>
 	<table style="margin-left:auto;margin-right:auto;">
 		<tr>
 			<td><p>Date: <span id="datetime"></span></p></td>
@@ -40,11 +38,14 @@ deathIdxArray = [];
 recoveredIdxArray = [];
 emojisChangeDrawn = [];
 emojisConfirmedDrawn = [];
-scrapData();
+//scrapData();
 emojiInts = emojiClustersPoints();
 totalConfirmed = 0;
 totalDeaths = 0;
 totalRecovered = 0;
+emojiUniqueID = 0;
+deathsLimit = 0;
+recoveredLimit = 0;
 
 var downloadSVG = function(svg)
 {
@@ -154,7 +155,40 @@ function EmojiMosaic(dataURI) {
 
 var drawCasesSamplesOnce = function(sample, category)
 {
-	imageData = extractionCanvasContext.getImageData(Math.round( sample[0] - margin ), Math.round( sample[1] - margin ), 1, 1);
+	var svgCont = d3.select('svg');
+	if(category=='change')
+	{
+		//pick randomly a confirmed case to interchange with a death one
+		removalIdx = Math.floor(Math.random() * emojisConfirmedDrawn.length);
+		//removalIdx = emojisConfirmedDrawn.length-1;
+		emojiToRemove = emojisConfirmedDrawn[removalIdx];
+		idToRemove = emojiToRemove.attr("id")
+		dataX = emojiToRemove.attr('x');
+		dataY = emojiToRemove.attr('y');
+		//remove it from document
+		/*d3.select('#'+idToRemove).remove();
+		emojisConfirmedDrawn.splice(removalIdx,1);*/
+	}
+	else if(category=='death' || category=='recovered')
+	{
+		//pick randomly a confirmed case to interchange with a death one
+		removalIdx = Math.floor(Math.random() * emojisChangeDrawn.length);
+		//removalIdx = emojisChangeDrawn.length-1;
+		emojiToRemove = emojisChangeDrawn[removalIdx];
+		idToRemove = emojiToRemove.attr("id");
+		dataX = emojiToRemove.attr('x');
+		dataY = emojiToRemove.attr('y');
+		//remove it from document
+		/*d3.select('#'+idToRemove).remove();
+		emojisChangeDrawn.splice(removalIdx,1);*/
+	}
+	else
+	{
+		dataX = sample[0] - 10;
+		dataY = sample[1] - 10;
+	}
+
+	imageData = extractionCanvasContext.getImageData(Math.round( dataX - margin ), Math.round( dataY - margin ), 1, 1);
 
 	// Get average color data for an area.
 	sums = { red: 0, green: 0, blue: 0 };
@@ -199,103 +233,90 @@ var drawCasesSamplesOnce = function(sample, category)
 	if(clusterPathsAvailable)
 	{
 		idx = Math.floor(Math.random() * clusterPathsAvailable.length);
-		/*if(typeof clusterPathsAvailable[idx]!='undefined')
-		{*/
 		emojiPath = 'resized-emoji-images/' + clusterPathsAvailable[idx];
-		//}
 	}
 
 	if(emojiPath)
-	{
-		emojiImage = new Image();
-		emojiImage.src = emojiPath;
-		dataX = sample[0] - 10;
-		dataY = sample[1] - 10;
-		emojiImage.setAttribute('data-x', (sample[0] - 10 ) );
-		emojiImage.setAttribute('data-y', (sample[1] - 10 ) );
-		//emojiImage.style.transform = 'rotate(180deg)';
-		// After the image is loaded, draw it onto the canvas.
-		emojiImage.onload = (function(event){
-			var image = event.target;
+	{	
+		if(emojiPath=='resized-emoji-images/undefined')
+		{
+			emojiPath = '';
+		}
+		
+		if(category=='change')
+		{
+			//remove emoji from document
+			d3.select('#'+idToRemove).remove();
+			emojisConfirmedDrawn.splice(removalIdx,1)
+		}
+		else if(category=='death' || category=='recovered')
+		{
+			//remove emoji from document
+			d3.select('#'+idToRemove).remove();
+			emojisChangeDrawn.splice(removalIdx,1);
+		}			
 
-			if(category=='change')
+		var svgimg = svgCont.append('image')
+		.attr('xlink:href', emojiPath)
+		.attr('id', 'emoji'+emojiUniqueID.toString())
+		.attr('width', 10)
+		.attr('height', 10)
+		.attr('x', dataX)
+		.attr('y', dataY);
+		emojiUniqueID++;
+
+		if(category == 'confirmed')
+		{
+			emojisConfirmedDrawn.push(svgimg);
+			//check if date needs to be changed and save file with svg
+			totalConfirmed++;
+			if(confirmedDictionary[totalConfirmed])
 			{
-				//pick randomly a confirmed case to interchange with a death one
-				removalIdx = Math.floor(Math.random() * emojisConfirmedDrawn.length);
-				emojiToRemove = emojisConfirmedDrawn[removalIdx];
-				//remove it from document
-				document.getElementById('svgContainer').removeChild(emojiToRemove);
-				emojisConfirmedDrawn.splice(removalIdx,1);
+				dateConfirmed = confirmedDictionary[totalConfirmed];
+				var dt = new Date(dateConfirmed);
+				document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+				deathsLimit = deaths[dateConfirmed];
+				recoveredLimit = recovered[dateConfirmed];
+				//get svg element.
+				/*var svg = document.getElementById("svgContainer");	
+				downloadSVG(svg);*/
 			}
-			else if(category=='death' || category=='recovered')
-			{
-				//pick randomly a confirmed case to interchange with a death one
-				removalIdx = Math.floor(Math.random() * emojisChangeDrawn.length);
-				emojiToRemove = emojisChangeDrawn[removalIdx];
-				//remove it from document
-				document.getElementById('svgContainer').removeChild(emojiToRemove);
-				emojisChangeDrawn.splice(removalIdx,1);
-			}
-
-
-			dataX = image.getAttribute('data-x');
-			dataY = image.getAttribute('data-y');
-			rotationAngle = Math.random() * 360;
-			var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
-			/*svgimg.setAttribute('height','17');
-			svgimg.setAttribute('width','17');*/
-			svgimg.setAttribute('height','10');
-			svgimg.setAttribute('width','10');
-			svgimg.setAttribute('id','imageContainer');
-			svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', image.src);
-
-			svgimg.setAttribute('x', dataX);
-			svgimg.setAttribute('y', dataY);
-			document.getElementById('svgContainer').appendChild(svgimg);
-			if(category == 'confirmed')
-			{
-				emojisConfirmedDrawn.push(svgimg);
-				//check if date needs to be changed and save file with svg
-				numChildrenSVG = document.getElementById('svgContainer').children.length;
-				totalConfirmed++;
-				if(confirmedDictionary[totalConfirmed])
-				{
-					dateConfirmed = confirmedDictionary[totalConfirmed];
-					var dt = new Date(dateConfirmed);
-					document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
-					//get svg element.
-					/*var svg = document.getElementById("svgContainer");	
-					downloadSVG(svg);*/
-				}
-				document.getElementById("confirmedCasesDisplay").innerHTML = totalConfirmed;
-				/*if(confirmedDictionary[numChildrenSVG])
-				{
-					dateConfirmed = confirmedDictionary[numChildrenSVG];
-					var dt = new Date(dateConfirmed);
-					document.getElementById("datetime").innerHTML = dt.toLocaleDateString();*/
-					//get svg element.
-					/*var svg = document.getElementById("svgContainer");	
-					downloadSVG(svg);*/
-				//}
-			}
-			else if(category=='death')
+			if(totalDeaths<deathsLimit)
 			{
 				totalDeaths++;
-				document.getElementById("deathsCasesDisplay").innerHTML = totalDeaths;	
+				document.getElementById("deathsCasesDisplay").innerHTML = totalDeaths;
 			}
-			else if(category=='recovered')
+			if(totalRecovered<recoveredLimit)
 			{
 				totalRecovered++;
 				document.getElementById("recoveredCasesDisplay").innerHTML = totalRecovered;
 			}
-			else if(category=='change')
-			{
-				emojisChangeDrawn.push(svgimg);
-			}
-		});
+			document.getElementById("confirmedCasesDisplay").innerHTML = totalConfirmed;
+		}
+		/*else if(category=='death')
+		{
+			totalDeaths++;
+			document.getElementById("deathsCasesDisplay").innerHTML = totalDeaths;	
+		}
+		else if(category=='recovered')
+		{
+			totalRecovered++;
+			document.getElementById("recoveredCasesDisplay").innerHTML = totalRecovered;
+		}*/
+		else if(category=='change')
+		{
+			emojisChangeDrawn.push(svgimg);
+		}
+		
 	}
 	else
 	{
+		if(category=='death' || category=='recovered')
+		{
+			//remove emoji from document
+			d3.select('#'+idToRemove).remove();
+			emojisChangeDrawn.splice(removalIdx,1);
+		}	
 		if(category=='confirmed')
 		{
 			totalConfirmed++;
@@ -305,9 +326,19 @@ var drawCasesSamplesOnce = function(sample, category)
 				var dt = new Date(dateConfirmed);
 				document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
 			}
+			if(totalDeaths<deathsLimit)
+			{
+				totalDeaths++;
+				document.getElementById("deathsCasesDisplay").innerHTML = totalDeaths;
+			}
+			if(totalRecovered<recoveredLimit)
+			{
+				totalRecovered++;
+				document.getElementById("recoveredCasesDisplay").innerHTML = totalRecovered;
+			}
 			document.getElementById("infectedCasesDisplay").innerHTML = totalConfirmed;
 		}
-		else if(category=='death')
+		/*else if(category=='death')
 		{
 			totalDeaths++;
 			document.getElementById("deathsCasesDisplay").innerHTML = totalDeaths;	
@@ -316,15 +347,8 @@ var drawCasesSamplesOnce = function(sample, category)
 		{
 			totalRecovered++;
 			document.getElementById("recoveredCasesDisplay").innerHTML = totalRecovered;
-		}
+		}*/
 	}
-	/*else
-	{
-		var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
-		svgimg.setAttribute('x', dataX);
-		svgimg.setAttribute('y', dataY);
-		
-	}*/
 }
 
 Date.prototype.formatMMDDYYYY = function(){
@@ -337,8 +361,8 @@ ImageLoaded.prototype.imageLoaded = function()
 {
 	var  width, height, createSample, ratio;
 	// If the image is too big, make the dimensions smaller.
-	//ratio = ( 960 ) / ( this.img.width + margin * 2 );
-	ratio = ( window.innerWidth ) / ( this.img.width + margin * 2 );
+	//ratio = ( 1024 ) / ( this.img.width + margin * 2 );
+	ratio = ( window.innerWidth - 100 ) / ( this.img.width + margin * 2 );
 	this.img.height *= ratio;
 	this.img.width *= ratio;
 
@@ -379,9 +403,21 @@ ImageLoaded.prototype.imageLoaded = function()
 		}
 		samples.push(s);
 	}
+
+	/* Randomize array in-place using Durstenfeld shuffle algorithm */
+	/*for (var i = samples.length - 1; i > 0; i--) {
+		var j = Math.floor(Math.random() * (i + 1));
+		var temp = samples[i];
+		samples[i] = samples[j];
+		samples[j] = temp;
+	}*/
+	
+
 	casesDrawn = 0;
 	samplesIdx = 0; //last position used in samples array
 	casesToDraw = parseInt(Object.keys(confirmed)[Object.keys(confirmed).length - 1]);
+	deathsLimit = deaths["1/22/20"];
+	recoveredLimit = recovered["1/22/20"];
 	var dt = new Date("1/22/20");
 	document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
 	lastIdx = 0;
@@ -410,13 +446,11 @@ ImageLoaded.prototype.imageLoaded = function()
 			{
 				if(samplesIdx<samples.length)
 				{
-					sample = samples[samplesIdx];
 					drawCasesSamplesOnce(samples[samplesIdx], 'confirmed');
 				}
 				else
 				{
 					samplesIdx = 0;
-					sample = samples[samplesIdx];
 					drawCasesSamplesOnce(samples[samplesIdx], 'confirmed');
 				}
 
@@ -424,11 +458,12 @@ ImageLoaded.prototype.imageLoaded = function()
 				confirmedCasesDrawn++;
 				if(confirmedDictionary[String(casesDrawn)])
 				{
-					dt = new Date(confirmedDictionary[String(confirmedCasesDrawn)]);
+					stringDate = String(confirmedCasesDrawn);
+					dt = new Date(confirmedDictionary[stringDate]);
 					document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
 				}
 			}
-		}, 0.00000000000000000000000000001);
+		});
 
 		//before drawing anything else draw the waves for change
 		window.setInterval(function()
@@ -441,19 +476,10 @@ ImageLoaded.prototype.imageLoaded = function()
 			{
 				if(emojisConfirmedDrawn.length>0)
 				{
-					//pick randomly a confirmed case to interchange with a death one
-					/*removalIdx = Math.floor(Math.random() * emojisConfirmedDrawn.length)
-					emojiToRemove = emojisConfirmedDrawn[removalIdx];
-					//get coordinates
-					dataX = emojiToRemove.getAttribute('x');
-					dataY = emojiToRemove.getAttribute('y');
-					//remove it from document
-					document.getElementById('svgContainer').removeChild(emojiToRemove)
-					emojisConfirmedDrawn.splice(removalIdx,1)*/
 					drawCasesSamplesOnce([dataX, dataY], "change");
 				}
 			}
-		}, 0.00000000000000000000000000001);
+		}, 1000);
 	
 		//second draw the death cases
 		window.setInterval(function()
@@ -466,19 +492,10 @@ ImageLoaded.prototype.imageLoaded = function()
 			{
 				if(emojisChangeDrawn.length>0)
 				{
-					//pick randomly a confirmed case to interchange with a death one
-					/*removalIdx = Math.floor(Math.random() * emojisChangeDrawn.length)
-					emojiToRemove = emojisChangeDrawn[removalIdx];
-					//get coordinates
-					dataX = emojiToRemove.getAttribute('x');
-					dataY = emojiToRemove.getAttribute('y');
-					//remove it from document
-					document.getElementById('svgContainer').removeChild(emojiToRemove)
-					emojisChangeDrawn.splice(removalIdx,1);*/
 					drawCasesSamplesOnce([dataX, dataY], "death");
 				}
 			}
-		}, 0.00000000000000000000000000001);
+		});
 
 		//third draw the recovered cases
 		window.setInterval(function()
@@ -491,19 +508,79 @@ ImageLoaded.prototype.imageLoaded = function()
 			{
 				if(emojisChangeDrawn.length>0)
 				{
-					//pick randomly a confirmed case to interchange with a death one
-					/*removalIdx = Math.floor(Math.random() * wavesCasesDrawn.length)
-					emojiToRemove = wavesCasesDrawn[removalIdx];
-					//get coordinates
-					dataX = emojiToRemove.getAttribute('x');
-					dataY = emojiToRemove.getAttribute('y');
-					//remove it from document
-					document.getElementById('svgContainer').removeChild(emojiToRemove)
-					wavesCasesDrawn.splice(removalIdx,1)*/
 					drawCasesSamplesOnce([dataX, dataY], "recovered");
 				}
 			}
-		}, 0.00000000000000000000000000001);
+		});
+		//first the confirmed cases
+		/*setInterval(function()
+		{
+			if(confirmedCasesDrawn>=confirmedCasesToDraw)
+			{
+				clearInterval();
+			}
+			else
+			{
+				if(confirmedCasesDrawn<samples.length)
+				{
+					drawCasesSamplesOnce(samples[confirmedCasesDrawn], 'confirmed');
+				}
+				else
+				{
+					r = confirmedCasesDrawn%samples.length;
+					drawCasesSamplesOnce(samples[r], 'confirmed');
+				}
+				confirmedCasesDrawn++;
+			}
+		})
+		//before drawing anything else draw the waves for change
+		window.setInterval(function()
+		{	
+			if(wavesCasesDrawn>=wavesCasesToDraw)
+			{
+				clearInterval();
+			}
+			else
+			{
+				if(emojisConfirmedDrawn.length>0)
+				{
+					drawCasesSamplesOnce([dataX, dataY], "change");
+					wavesCasesDrawn++;
+				}
+			}
+		}, 1000);
+		//second draw the death cases
+		window.setInterval(function()
+		{	
+			if(deathCasesDrawn>=deathCasesToDraw)
+			{
+				clearInterval();
+			}
+			else
+			{
+				if(emojisChangeDrawn.length>0)
+				{
+					drawCasesSamplesOnce([dataX, dataY], "death");
+					deathCasesDrawn++;
+				}
+			}
+		});
+		//third draw the recovered cases
+		window.setInterval(function()
+		{	
+			if(recoveredCasesDrawn>=recoveredCasesToDraw)
+			{
+				clearInterval();
+			}
+			else
+			{
+				if(emojisChangeDrawn.length>0)
+				{
+					drawCasesSamplesOnce([dataX, dataY], "recovered");
+					recoveredCasesDrawn++;
+				}
+			}
+		});*/
 	}
 }
 
@@ -517,7 +594,17 @@ function ImageLoaded(dataURI) {
 
 document.addEventListener('DOMContentLoaded', function (event) 
 { 	
-	//imageLoaded();
 	new ImageLoaded('./original-image/ad.jpg');
+
+	/*var inputEl = document.querySelector('input');
+	document.querySelector('input').addEventListener('change', function () {
+		// When a file is uploaded, initialize
+		var file = inputEl.files[0];
+		var reader = new FileReader();
+		reader.onloadend = function () {
+			new ImageLoaded(reader.result);
+		}
+		reader.readAsDataURL(file);
+	});*/
 });
 </script>
